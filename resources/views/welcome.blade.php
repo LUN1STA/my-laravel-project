@@ -6,119 +6,59 @@
 
 <div class="container">
 
-    <section class="hero">
+    <div class="page">
 
-        <div class="hero-text">
-
-            <div class="eyebrow">
-                Ваша кухня — в одном месте
-            </div>
-
-            <h1>
-                Готовьте.
-                <span>Храните.</span>
-                Планируйте.
-            </h1>
-
-            <p>
-                Cook & Stock помогает хранить любимые рецепты,
-                следить за продуктами дома и планировать покупки,
-                чтобы на кухне всегда было всё необходимое.
-            </p>
-
-            <div class="buttons">
-                <a href="{{ route('about') }}" class="button button-primary">
-                    Узнать больше
-                </a>
-
-                <a href="{{ route('contacts') }}" class="button button-secondary">
-                    Команда проекта
-                </a>
-            </div>
-
+        <div class="eyebrow">
+            Новости
         </div>
 
+        <h1>
+            Статьи
+        </h1>
 
-        <div class="hero-image">
-            <img src="{{ asset('https://i.pinimg.com/originals/14/19/40/14194032eb13cb119df33f3a8c439bb1.jpg?nii=t') }}" alt="Блюдо Cook & Stock">
-        </div>
+        <p>
+            Последние публикации проекта Cook & Stock.
+        </p>
 
-    </section>
+        <div class="articles-grid">
 
+            @foreach ($articles as $article)
 
-    <section class="features">
+                <div class="article-card">
 
-        <div class="section-heading">
+                    <a href="{{ route('galery', ['id' => $loop->index]) }}">
+                        <img
+                            src="/{{ $article['preview_image'] }}"
+                            alt="{{ $article['name'] }}"
+                            class="article-image"
+                        >
+                    </a>
 
-            <h2>
-                Всё для вашей кухни
-            </h2>
+                    <div class="article-content">
 
-            <p>
-                Основные возможности Cook & Stock
-            </p>
+                        <div class="article-date">
+                            {{ $article['date'] }}
+                        </div>
 
-        </div>
+                        <h2>
+                            {{ $article['name'] }}
+                        </h2>
 
+                        @if (isset($article['shortDesc']))
+                            <p>
+                                {{ $article['shortDesc'] }}
+                            </p>
+                        @endif
 
-        <div class="feature-grid">
+                    </div>
 
-            <div class="feature-card">
-
-                <div class="feature-icon">
-                    📖
                 </div>
 
-                <h3>
-                    Рецепты
-                </h3>
-
-                <p>
-                    Храните любимые рецепты и находите
-                    идеи для новых блюд.
-                </p>
-
-            </div>
-
-
-            <div class="feature-card">
-
-                <div class="feature-icon">
-                    🥕
-                </div>
-
-                <h3>
-                    Запасы
-                </h3>
-
-                <p>
-                    Следите за продуктами, которые уже
-                    есть дома, и их количеством.
-                </p>
-
-            </div>
-
-
-            <div class="feature-card">
-
-                <div class="feature-icon">
-                    🛒
-                </div>
-
-                <h3>
-                    Покупки
-                </h3>
-
-                <p>
-                    Создавайте список покупок и не забывайте
-                    о продуктах, которые заканчиваются.
-                </p>
-
-            </div>
+            @endforeach
 
         </div>
 
-    </section>
+    </div>
 
 </div>
 
