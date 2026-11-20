@@ -6,7 +6,7 @@ use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Mail\ArticleCreated;
-use Illuminate\Support\Facades\Mail;
+use App\Jobs\VeryLongJob;
 
 class ArticleController extends Controller
 {
@@ -55,13 +55,7 @@ class ArticleController extends Controller
             'desc' => $validated['desc'],
         ]);
 
-        $moderator = \App\Models\User::whereHas('role', function ($query) {
-            $query->where('name', 'moderator');
-        })->first();
-
-        if ($moderator) {
-            Mail::to($moderator->email)->send(new ArticleCreated($article));
-        }
+        VeryLongJob::dispatch($article);
 
         return redirect()
             ->route('articles.index')
