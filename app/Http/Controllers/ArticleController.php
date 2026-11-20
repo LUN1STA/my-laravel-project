@@ -12,15 +12,43 @@ use App\Notifications\NewArticleNotification;
 use Illuminate\Support\Facades\Notification;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class ArticleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $articles = Article::paginate(6);
+        $page = max(1, (int) $request->input('page', 1));
+        $perPage = 6;
+
+        $articlesData = Cache::remember(
+            'articles.page.' . $page,
+            now()->addMinutes(10),
+            function () use ($page, $perPage) {
+                return Article::latest('date')
+                    ->forPage($page, $perPage)
+                    ->get()
+                    ->toArray();
+            }
+        );
+
+        $articlesCollection = Article::hydrate($articlesData);
+
+        $total = Article::count();
+
+        $articles = new \Illuminate\Pagination\LengthAwarePaginator(
+            $articlesCollection,
+            $total,
+            $perPage,
+            $page,
+            [
+                'path' => $request->url(),
+                'query' => $request->query(),
+            ]
+        );
 
         return view('articles.index', [
-            'articles' => $articles
+            'articles' => $articles,
         ]);
     }
 
@@ -60,6 +88,8 @@ class ArticleController extends Controller
             'desc' => $validated['desc'],
         ]);
 
+        Cache::flush();
+
         $readers = User::whereHas('role', function ($query) {
             $query->where('name', 'reader');
         })
@@ -82,15 +112,34 @@ class ArticleController extends Controller
 
     public function show($id)
     {
-        $article = Article::with([
-            'comments' => function ($query) {
-                $query->where('is_moderated', true)
-                    ->with('user');
+        $articleData = Cache::rememberForever(
+            'article.' . $id,
+            function () use ($id) {
+                $article = Article::with([
+                    'comments' => function ($query) {
+                        $query->where('is_moderated', true)
+                            ->with('user');
+                    }
+                ])->findOrFail($id);
+
+                return $article->toArray();
             }
-        ])->findOrFail($id);
+        );
+
+        $article = Article::hydrate([
+            $articleData
+        ])->first();
+
+        if (!empty($articleData['comments'])) {
+            $comments = \App\Models\Comment::hydrate(
+                $articleData['comments']
+            );
+
+            $article->setRelation('comments', $comments);
+        }
 
         return view('articles.show', [
-            'article' => $article
+            'article' => $article,
         ]);
     }
 
@@ -139,6 +188,7 @@ class ArticleController extends Controller
         }
 
         $article->update($data);
+        Cache::flush();
 
         return redirect()
             ->route('articles.show', $article->id)
@@ -152,6 +202,7 @@ class ArticleController extends Controller
         Gate::authorize('delete', $article);
 
         $article->delete();
+        Cache::flush();
 
         return redirect()
             ->route('articles.index')
