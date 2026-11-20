@@ -3,63 +3,151 @@
 @section('title', 'Главная')
 
 @section('content')
+    <div class="container">
 
-<div class="container">
+        <div class="page">
 
-    <div class="page">
+            {{-- Главный блок --}}
+            <section class="hero">
 
-        <div class="eyebrow">
-            Новости
-        </div>
+                <div class="hero-content">
+                    <div class="eyebrow">Cook & Stock</div>
 
-        <h1>
-            Статьи
-        </h1>
+                    <h1>
+                        Готовьте с удовольствием,<br>
+                        а продукты держите под контролем.
+                    </h1>
 
-        <p>
-            Последние публикации проекта Cook & Stock.
-        </p>
+                    <p>
+                        Cook & Stock помогает хранить рецепты, следить за запасами
+                        продуктов и планировать покупки в одном месте.
+                    </p>
 
-        <div class="articles-grid">
+                    <div class="hero-actions">
+                        <a href="{{ route('signin') }}" class="button button-primary">
+                            Создать аккаунт
+                        </a>
 
-            @foreach ($articles as $article)
+                        <a href="{{ route('about') }}" class="button button-secondary">
+                            Узнать больше
+                        </a>
+                    </div>
+                </div>
 
-                <div class="article-card">
+                <div class="hero-image">
+                    <img src="{{ asset('https://i.pinimg.com/originals/14/19/40/14194032eb13cb119df33f3a8c439bb1.jpg?nii=t') }}"
+                        alt="Домашняя еда">
+                </div>
 
-                    <a href="{{ route('galery', ['id' => $loop->index]) }}">
-                        <img
-                            src="/{{ $article['preview_image'] }}"
-                            alt="{{ $article['name'] }}"
-                            class="article-image"
-                        >
-                    </a>
+            </section>
 
-                    <div class="article-content">
 
-                        <div class="article-date">
-                            {{ $article['date'] }}
-                        </div>
+            {{-- Возможности --}}
+            <section class="features-section">
 
-                        <h2>
-                            {{ $article['name'] }}
-                        </h2>
+                <div class="eyebrow">
+                    Возможности
+                </div>
 
-                        @if (isset($article['shortDesc']))
-                            <p>
-                                {{ $article['shortDesc'] }}
-                            </p>
-                        @endif
+                <h2>
+                    Всё необходимое для удобной кухни
+                </h2>
 
+                <div class="features-grid">
+
+                    <div class="feature-card">
+                        <div class="feature-icon">📖</div>
+
+                        <h3>Рецепты</h3>
+
+                        <p>
+                            Храните свои любимые рецепты и находите идеи
+                            для новых блюд.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🥕</div>
+
+                        <h3>Запасы продуктов</h3>
+
+                        <p>
+                            Следите за тем, какие продукты уже есть дома
+                            и сколько их осталось.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🛒</div>
+
+                        <h3>Список покупок</h3>
+
+                        <p>
+                            Планируйте покупки и не забывайте продукты,
+                            которые заканчиваются.
+                        </p>
                     </div>
 
                 </div>
 
-            @endforeach
+            </section>
+
+
+            {{-- Новости --}}
+            <section class="news-section">
+
+                <div class="eyebrow">
+                    Новости
+                </div>
+
+                <h2>
+                    Последние публикации
+                </h2>
+
+                <p class="section-description">
+                    Полезные советы, идеи для кухни и новости Cook & Stock.
+                </p>
+
+                <div class="articles-grid">
+
+                    @foreach ($articles as $article)
+                        <article class="article-card">
+
+                            <a href="{{ route('galery', ['id' => $loop->index]) }}">
+                                <img src="{{ $article['preview_image'] }}" alt="{{ $article['name'] }}"
+                                    class="article-image">
+                            </a>
+
+                            <div class="article-content">
+
+                                <div class="article-date">
+                                    {{ $article['date'] }}
+                                </div>
+
+                                <h3>
+                                    {{ $article['name'] }}
+                                </h3>
+
+                                @if (isset($article['shortDesc']))
+                                    <p>
+                                        {{ $article['shortDesc'] }}
+                                    </p>
+                                @endif
+
+                                <a href="{{ route('galery', ['id' => $loop->index]) }}" class="article-link">
+                                    Читать →
+                                </a>
+
+                            </div>
+
+                        </article>
+                    @endforeach
+
+                </div>
+
+            </section>
 
         </div>
 
     </div>
-
-</div>
-
 @endsection
