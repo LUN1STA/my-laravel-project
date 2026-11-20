@@ -113,28 +113,27 @@
                     @foreach ($articles as $article)
                         <article class="article-card">
 
-                            <a href="{{ route('galery', ['id' => $loop->index]) }}">
-                                <img src="{{ $article['preview_image'] }}" alt="{{ $article['name'] }}"
-                                    class="article-image">
+                            <a href="{{ route('galery', ['id' => $article->id]) }}">
+                                <img src="/{{ $article->preview_image }}" alt="{{ $article->name }}" class="article-image">
                             </a>
 
                             <div class="article-content">
 
                                 <div class="article-date">
-                                    {{ $article['date'] }}
+                                    {{ $article->date->format('d.m.Y') }}
                                 </div>
 
                                 <h3>
-                                    {{ $article['name'] }}
+                                    {{ $article->name }}
                                 </h3>
 
-                                @if (isset($article['shortDesc']))
+                                @if ($article->shortDesc)
                                     <p>
-                                        {{ $article['shortDesc'] }}
+                                        {{ $article->shortDesc }}
                                     </p>
                                 @endif
 
-                                <a href="{{ route('galery', ['id' => $loop->index]) }}" class="article-link">
+                                <a href="{{ route('galery', ['id' => $article->id]) }}" class="article-link">
                                     Читать →
                                 </a>
 

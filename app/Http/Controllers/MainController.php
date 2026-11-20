@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
+
 class MainController extends Controller
 {
     public function index()
     {
-        $json = file_get_contents(public_path('articles.json'));
-
-        $data = json_decode($json, true);
-
-        $articles = $data['articles'];
+        $articles = Article::all();
 
         return view('welcome', [
             'articles' => $articles
@@ -19,11 +17,7 @@ class MainController extends Controller
 
     public function galery($id)
     {
-        $json = file_get_contents(public_path('articles.json'));
-
-        $data = json_decode($json, true);
-
-        $article = $data['articles'][$id] ?? null;
+        $article = Article::find($id);
 
         if ($article === null) {
             abort(404);
