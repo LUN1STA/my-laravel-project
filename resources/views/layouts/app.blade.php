@@ -298,6 +298,9 @@
             border-radius: 14px;
 
             transition: 0.2s;
+
+            display: flex;
+            flex-direction: column;
         }
 
         .article-card:hover {
@@ -314,7 +317,11 @@
         }
 
         .article-content {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
             padding: 25px;
+            box-sizing: border-box;
         }
 
         .article-date {
@@ -329,6 +336,8 @@
             margin-bottom: 12px;
             font-size: 22px;
             line-height: 1.3;
+            display: flex;
+            flex-direction: column;
         }
 
         .article-card p {
@@ -344,6 +353,48 @@
 
         .article-link:hover {
             color: #8f4432;
+        }
+
+        .article-create-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100%;
+            text-decoration: none;
+            color: #a65d3f;
+            background: #f5e8dc;
+            transition: 0.2s ease;
+        }
+
+        .article-create-card:hover {
+            background: #ead4c3;
+            transform: translateY(-3px);
+        }
+
+        .article-create-card span {
+            font-size: 56px;
+            font-weight: 300;
+            line-height: 1;
+        }
+
+        .article-actions {
+            margin-top: auto;
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .article-edit-link {
+            color: #8b7569;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .article-edit-link:hover {
+            color: #a65d3f;
+            text-decoration: underline;
         }
 
         /* ----- GALLERY ----- */
@@ -464,6 +515,58 @@
             font-weight: bold;
         }
 
+        /* ----- PAGINATION ----- */
+
+        .pagination {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pagination a,
+        .pagination-current,
+        .pagination-disabled {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            text-decoration: none;
+            box-sizing: border-box;
+        }
+
+        .pagination a {
+            color: #6b4030;
+            background: #f5e8dc;
+        }
+
+        .pagination a:hover {
+            background: #ead4c3;
+        }
+
+        .pagination-current {
+            color: white;
+            background: #a65d3f;
+        }
+
+        .pagination-disabled {
+            color: #b9a79b;
+            background: #f3eee9;
+        }
+
+        /* ----- MESSAGES ----- */
+
+        .success-message {
+            margin: 25px 0;
+            padding: 14px 18px;
+            border-radius: 8px;
+            background: #e8f2e5;
+            color: #4d6846;
+        }
+
         /* ----- FOOTER ----- */
 
         footer {
@@ -556,6 +659,7 @@
 
             <nav>
                 <a href="{{ route('home') }}">Главная</a>
+                <a href="{{ route('articles.index') }}">Новости</a>
                 <a href="{{ route('about') }}">О нас</a>
                 <a href="{{ route('contacts') }}">Контакты</a>
                 <a href="{{ route('signin') }}">Регистрация</a>
