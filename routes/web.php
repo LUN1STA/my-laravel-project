@@ -8,8 +8,22 @@ use App\Http\Controllers\ArticleController;
 Route::get('/', [MainController::class, 'index'])->name('home');
 Route::get('/galery/{id}', [MainController::class, 'galery'])->name('galery');
 Route::get('/signin', [AuthController::class, 'create'])->name('signin');
-Route::post('/signin', [AuthController::class, 'registration']);
-Route::resource('/articles', ArticleController::class);
+
+Route::post('/signin/register', [AuthController::class, 'registration'])
+    ->name('signin.register');
+
+Route::post('/signin', [AuthController::class, 'login'])
+    ->name('signin.login');
+
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->name('logout');
+
+Route::resource('/articles', ArticleController::class)
+    ->only(['create', 'store', 'edit', 'update', 'destroy'])
+    ->middleware('auth:sanctum');
+
+Route::resource('/articles', ArticleController::class)
+    ->only(['index', 'show']);
 
 Route::get('/about', function () {
     return view('about');

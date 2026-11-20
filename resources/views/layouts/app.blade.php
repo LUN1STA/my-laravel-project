@@ -81,6 +81,41 @@
             color: #b85c43;
         }
 
+        .nav-auth-form {
+            display: inline;
+        }
+
+        .nav-auth-button {
+            display: inline-block;
+
+            padding: 7px 14px;
+
+            border: 1px solid #b85c43;
+            border-radius: 8px;
+
+            background: transparent;
+            color: #a65d3f;
+
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.2;
+
+            text-decoration: none;
+            cursor: pointer;
+
+            transition: 0.2s ease;
+        }
+
+        .nav-auth-button:hover {
+            background: #a65d3f;
+            color: #fffaf1;
+        }
+
+        .nav-logout:hover {
+            color: #a65d3f;
+        }
+
         /* ----- GENERAL ----- */
 
         .container {
@@ -428,6 +463,42 @@
             border-radius: 14px;
         }
 
+        .auth-switcher {
+            display: flex;
+            gap: 5px;
+            margin: 30px 0 25px;
+            padding: 5px;
+            background: #f5e8dc;
+            border-radius: 10px;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 12px 20px;
+
+            border: none;
+            border-radius: 7px;
+
+            background: transparent;
+            color: #8b7569;
+
+            font-size: 16px;
+            font-family: inherit;
+            cursor: pointer;
+
+            transition: 0.2s ease;
+        }
+
+        .auth-tab:hover {
+            color: #a65d3f;
+        }
+
+        .auth-tab.active {
+            background: #fffaf1;
+            color: #a65d3f;
+            box-shadow: 0 2px 6px rgba(90, 60, 40, 0.08);
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
@@ -567,6 +638,18 @@
             color: #4d6846;
         }
 
+        .error-message {
+            margin-bottom: 25px;
+            padding: 14px 18px;
+
+            background: #f5e0d9;
+            border: 1px solid #d9a08f;
+            border-radius: 10px;
+
+            color: #8f4432;
+            font-size: 15px;
+        }
+
         /* ----- FOOTER ----- */
 
         footer {
@@ -662,7 +745,18 @@
                 <a href="{{ route('articles.index') }}">Новости</a>
                 <a href="{{ route('about') }}">О нас</a>
                 <a href="{{ route('contacts') }}">Контакты</a>
-                <a href="{{ route('signin') }}">Регистрация</a>
+                @auth
+                    <form action="{{ route('logout') }}" method="POST" class="nav-auth-form">
+                        @csrf
+                        <button type="submit" class="nav-auth-button">
+                            Выйти
+                        </button>
+                    </form>
+                @else
+                    <a href="{{ route('signin') }}" class="nav-auth-button">
+                        Вход / Регистрация
+                    </a>
+                @endauth
             </nav>
 
         </div>
@@ -670,6 +764,12 @@
 
 
     <main>
+        @if (session('error'))
+            <div class="error-message">
+                {{ session('error') }}
+            </div>
+        @endif
+
         @yield('content')
     </main>
 
