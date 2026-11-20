@@ -9,6 +9,42 @@ use Illuminate\Support\Facades\Gate;
 
 class CommentController extends Controller
 {
+    public function moderation()
+    {
+        Gate::authorize('viewModeration', Comment::class);
+
+        $comments = Comment::with(['user', 'article'])
+            ->where('is_moderated', false)
+            ->latest()
+            ->get();
+
+        return view('comments.moderation', [
+            'comments' => $comments,
+        ]);
+    }
+    public function approve(Comment $comment)
+    {
+        Gate::authorize('moderate', $comment);
+
+        $comment->update([
+            'is_moderated' => true,
+        ]);
+
+        return redirect()
+            ->route('comments.moderation')
+            ->with('success', 'Комментарий принят.');
+    }
+    public function reject(Comment $comment)
+    {
+        Gate::authorize('moderate', $comment);
+
+        $comment->delete();
+
+        return redirect()
+            ->route('comments.moderation')
+            ->with('success', 'Комментарий отклонён.');
+    }
+
     public function store(Request $request, Article $article)
     {
         Gate::authorize('create', Comment::class);
@@ -21,11 +57,12 @@ class CommentController extends Controller
             'user_id' => $request->user()->id,
             'article_id' => $article->id,
             'text' => $validated['text'],
+            'is_moderated' => false,
         ]);
 
         return redirect()
             ->route('articles.show', $article)
-            ->with('success', 'Комментарий добавлен.');
+            ->with('success', 'Комментарий отправлен и ожидает модерации.');
     }
 
     public function update(Request $request, Comment $comment)

@@ -873,6 +873,70 @@
             color: #fffaf1;
         }
 
+        /* ----- MODERATION ----- */
+
+        .nav-moderation {
+            margin-left: 10px;
+            padding: 7px 14px;
+            border: 1px solid #b85c43;
+            border-radius: 8px;
+            background: transparent;
+            color: #b85c43;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.2s ease;
+        }
+
+        .nav-moderation:hover {
+            background: #b85c43;
+            color: #fffaf1;
+        }
+
+        .moderation-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .moderation-actions form {
+            margin: 0;
+        }
+
+        .comment-approve-btn,
+        .comment-reject-btn {
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .comment-approve-btn {
+            border: 1px solid #b85c43;
+            background: #b85c43;
+            color: #fffaf1;
+        }
+
+        .comment-approve-btn:hover {
+            background: #934832;
+            border-color: #934832;
+        }
+
+        .comment-reject-btn {
+            border: 1px solid #cdbdad;
+            background: transparent;
+            color: #7d4938;
+        }
+
+        .comment-reject-btn:hover {
+            background: #f0e4d6;
+            border-color: #b85c43;
+            color: #934832;
+        }
+
 
         /* ----- MOBILE ----- */
 
@@ -948,6 +1012,10 @@
                     @if (auth()->user()->role?->name === 'moderator')
                         <a href="{{ route('articles.create') }}" class="nav-create-article">
                             + Создать новость
+                        </a>
+
+                        <a href="{{ route('comments.moderation') }}" class="nav-moderation">
+                            Модерация комментариев
                         </a>
                     @endif
 

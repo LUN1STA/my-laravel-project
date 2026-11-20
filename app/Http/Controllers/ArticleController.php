@@ -70,7 +70,12 @@ class ArticleController extends Controller
 
     public function show($id)
     {
-        $article = Article::with('comments.user')->findOrFail($id);
+        $article = Article::with([
+            'comments' => function ($query) {
+                $query->where('is_moderated', true)
+                    ->with('user');
+            }
+        ])->findOrFail($id);
 
         return view('articles.show', [
             'article' => $article

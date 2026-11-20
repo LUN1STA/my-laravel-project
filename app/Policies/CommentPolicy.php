@@ -34,6 +34,25 @@ class CommentPolicy
             : Response::denyWithStatus(403, 'Только авторизованные пользователи могут оставлять комментарии.');
     }
 
+    public function viewModeration(User $user): Response
+    {
+        return $user->role?->name === 'moderator'
+            ? Response::allow()
+            : Response::denyWithStatus(
+                403,
+                'Только модератор может открывать страницу модерации комментариев.'
+            );
+    }
+    public function moderate(User $user, Comment $comment): Response
+    {
+        return $user->role?->name === 'moderator'
+            ? Response::allow()
+            : Response::denyWithStatus(
+                403,
+                'Только модератор может модерировать комментарии.'
+            );
+    }
+
     /**
      * Determine whether the user can update the model.
      */
