@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use App\Mail\ArticleCreated;
+use Illuminate\Support\Facades\Mail;
 
 class ArticleController extends Controller
 {
@@ -44,7 +46,7 @@ class ArticleController extends Controller
             $filename
         );
 
-        Article::create([
+        $article = Article::create([
             'date' => now(),
             'name' => $validated['name'],
             'preview_image' => 'images/articles/' . $filename,
@@ -52,6 +54,14 @@ class ArticleController extends Controller
             'shortDesc' => $validated['shortDesc'] ?? null,
             'desc' => $validated['desc'],
         ]);
+
+        $moderator = \App\Models\User::whereHas('role', function ($query) {
+            $query->where('name', 'moderator');
+        })->first();
+
+        if ($moderator) {
+            Mail::to($moderator->email)->send(new ArticleCreated($article));
+        }
 
         return redirect()
             ->route('articles.index')
