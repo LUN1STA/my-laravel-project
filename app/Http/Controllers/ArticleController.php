@@ -6,6 +6,7 @@ use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Mail\ArticleCreated;
+use App\Events\NewArticleEvent;
 use App\Jobs\VeryLongJob;
 
 class ArticleController extends Controller
@@ -54,6 +55,7 @@ class ArticleController extends Controller
             'shortDesc' => $validated['shortDesc'] ?? null,
             'desc' => $validated['desc'],
         ]);
+        NewArticleEvent::dispatch($article);
 
         VeryLongJob::dispatch($article);
 
