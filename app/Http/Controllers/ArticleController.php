@@ -112,31 +112,19 @@ class ArticleController extends Controller
 
     public function show($id)
     {
-        $articleData = Cache::rememberForever(
+        $articleId = Cache::rememberForever(
             'article.' . $id,
             function () use ($id) {
-                $article = Article::with([
-                    'comments' => function ($query) {
-                        $query->where('is_moderated', true)
-                            ->with('user');
-                    }
-                ])->findOrFail($id);
-
-                return $article->toArray();
+                return Article::findOrFail($id)->id;
             }
         );
 
-        $article = Article::hydrate([
-            $articleData
-        ])->first();
-
-        if (!empty($articleData['comments'])) {
-            $comments = \App\Models\Comment::hydrate(
-                $articleData['comments']
-            );
-
-            $article->setRelation('comments', $comments);
-        }
+        $article = Article::with([
+            'comments' => function ($query) {
+                $query->where('is_moderated', true)
+                    ->with('user');
+            }
+        ])->findOrFail($articleId);
 
         return view('articles.show', [
             'article' => $article,

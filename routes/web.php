@@ -25,8 +25,12 @@ Route::resource('/articles', ArticleController::class)
     ->only(['create', 'store', 'edit', 'update', 'destroy'])
     ->middleware('auth:sanctum');
 
-Route::resource('/articles', ArticleController::class)
-    ->only(['index', 'show']);
+Route::get('/articles', [ArticleController::class, 'index'])
+    ->name('articles.index');
+
+Route::get('/articles/{article}', [ArticleController::class, 'show'])
+    ->middleware('article.view')
+    ->name('articles.show');
 
 Route::post('/articles/{article}/comments', [CommentController::class, 'store'])
     ->middleware('auth:sanctum')

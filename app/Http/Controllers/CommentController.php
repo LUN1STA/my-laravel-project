@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Article;
 use App\Models\Comment;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Cache;
 
 class CommentController extends Controller
 {
@@ -30,6 +31,8 @@ class CommentController extends Controller
             'is_moderated' => true,
         ]);
 
+        Cache::forget('article.' . $comment->article_id);
+
         return redirect()
             ->route('comments.moderation')
             ->with('success', 'Комментарий принят.');
@@ -38,7 +41,11 @@ class CommentController extends Controller
     {
         Gate::authorize('moderate', $comment);
 
+        $articleId = $comment->article_id;
+
         $comment->delete();
+
+        Cache::forget('article.' . $articleId);
 
         return redirect()
             ->route('comments.moderation')
@@ -77,6 +84,8 @@ class CommentController extends Controller
             'text' => $validated['text'],
         ]);
 
+        Cache::forget('article.' . $comment->article_id);
+
         return redirect()
             ->route('articles.show', $comment->article)
             ->with('success', 'Комментарий обновлён.');
@@ -88,6 +97,8 @@ class CommentController extends Controller
         $article = $comment->article;
 
         $comment->delete();
+
+        Cache::forget('article.' . $article->id);
 
         return redirect()
             ->route('articles.show', $article)
