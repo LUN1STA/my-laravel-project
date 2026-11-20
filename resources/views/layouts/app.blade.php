@@ -1032,6 +1032,35 @@
                         Вход / Регистрация
                     </a>
                 @endauth
+                @if (auth()->check())
+                    <div class="notifications">
+                        <button type="button" class="notifications-button" aria-label="Уведомления" title="Уведомления"
+                            onclick="document
+        .getElementById('notifications-dropdown')
+        .classList.toggle('show')">
+                            🔔
+
+                            @if (auth()->user()->unreadNotifications->count() > 0)
+                                <span class="notifications-count">
+                                    {{ auth()->user()->unreadNotifications->count() }}
+                                </span>
+                            @endif
+                        </button>
+
+                        <div id="notifications-dropdown" class="notifications-dropdown">
+                            @forelse (auth()->user()->unreadNotifications as $notification)
+                                <a href="{{ route('notifications.read', $notification->id) }}"
+                                    class="notification-item">
+                                    {{ $notification->data['article_name'] }}
+                                </a>
+                            @empty
+                                <div class="notification-empty">
+                                    Нет новых уведомлений
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
+                @endif
             </nav>
 
         </div>

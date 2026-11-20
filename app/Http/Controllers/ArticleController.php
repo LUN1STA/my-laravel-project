@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Gate;
 use App\Mail\ArticleCreated;
 use App\Events\NewArticleEvent;
 use App\Jobs\VeryLongJob;
+use App\Notifications\NewArticleNotification;
+use Illuminate\Support\Facades\Notification;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class ArticleController extends Controller
 {
@@ -55,6 +59,18 @@ class ArticleController extends Controller
             'shortDesc' => $validated['shortDesc'] ?? null,
             'desc' => $validated['desc'],
         ]);
+
+        $readers = User::whereHas('role', function ($query) {
+            $query->where('name', 'reader');
+        })
+            ->where('id', '!=', Auth::id())
+            ->get();
+
+        Notification::send(
+            $readers,
+            new NewArticleNotification($article)
+        );
+
         NewArticleEvent::dispatch($article);
 
         VeryLongJob::dispatch($article);

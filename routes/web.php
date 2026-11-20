@@ -5,6 +5,8 @@ use App\Http\Controllers\MainController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CommentController;
+use Illuminate\Support\Facades\Auth;
+
 
 Route::get('/', [MainController::class, 'index'])->name('home');
 Route::get('/galery/{id}', [MainController::class, 'galery'])->name('galery');
@@ -44,6 +46,21 @@ Route::patch('/comments/{comment}/approve', [CommentController::class, 'approve'
 Route::delete('/comments/{comment}/reject', [CommentController::class, 'reject'])
     ->middleware('auth:sanctum')
     ->name('comments.reject');
+
+Route::get('/notifications/{notification}/read', function ($notification) {
+    $user = Auth::user();
+
+    $notification = $user->notifications()
+        ->where('id', $notification)
+        ->firstOrFail();
+
+    $notification->markAsRead();
+
+    return redirect()
+        ->route('articles.show', $notification->data['article_id']);
+})
+    ->middleware('auth:sanctum')
+    ->name('notifications.read');
 
 Route::get('/about', function () {
     return view('about');
