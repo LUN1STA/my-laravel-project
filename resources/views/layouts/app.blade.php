@@ -112,6 +112,25 @@
             color: #fffaf1;
         }
 
+        .nav-create-article {
+            margin-left: auto;
+            padding: 7px 14px;
+            border: 1px solid #b85c43;
+            border-radius: 8px;
+            background: #b85c43;
+            color: #fffaf1;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.2s ease;
+        }
+
+        .nav-create-article:hover {
+            background: #934832;
+            border-color: #934832;
+            color: #fffaf1;
+        }
+
         .nav-logout:hover {
             color: #a65d3f;
         }
@@ -676,6 +695,185 @@
             font-size: 14px;
         }
 
+        /* ----- COMMENTS ----- */
+
+        .comments-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #dfd2c2;
+        }
+
+        .comments-section~.button,
+        .comments-section~form {
+            margin-top: 28px;
+        }
+
+        .comments-section h2 {
+            margin-bottom: 24px;
+            color: #4a2f25;
+            font-size: 26px;
+        }
+
+        .comment {
+            margin-bottom: 20px;
+            padding: 18px 20px;
+            background: #fffaf1;
+            border: 1px solid #e4d8c8;
+            border-radius: 10px;
+        }
+
+        .comment-author {
+            margin-bottom: 8px;
+            color: #7d4938;
+            font-weight: 600;
+        }
+
+        .comment-text {
+            color: #4a403a;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        /* ----- COMMENT FORM ----- */
+
+        .comment-form {
+            margin-top: 30px;
+            padding: 22px;
+            background: #f7efe4;
+            border: 1px solid #e4d8c8;
+            border-radius: 10px;
+        }
+
+        .comment-form label {
+            display: block;
+            margin-bottom: 10px;
+            color: #4a2f25;
+            font-weight: 600;
+        }
+
+        .comment-form textarea {
+            display: block;
+            width: 100%;
+            min-height: 110px;
+            margin-bottom: 14px;
+            padding: 12px 14px;
+            box-sizing: border-box;
+
+            border: 1px solid #cdbdad;
+            border-radius: 8px;
+            background: #fffaf1;
+            color: #4a403a;
+
+            font-family: inherit;
+            font-size: 15px;
+            line-height: 1.5;
+
+            resize: vertical;
+        }
+
+        .comment-form textarea:focus {
+            outline: none;
+            border-color: #b85c43;
+            box-shadow: 0 0 0 2px rgba(184, 92, 67, 0.12);
+        }
+
+        /* ----- COMMENT MODERATOR FORM ----- */
+
+        .comment>form {
+            margin-top: 12px;
+        }
+
+        .comment>form textarea {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 8px;
+            padding: 10px 12px;
+
+            border: 1px solid #cdbdad;
+            border-radius: 8px;
+            background: #fffaf1;
+            color: #4a403a;
+
+            font-family: inherit;
+            font-size: 14px;
+            line-height: 1.5;
+
+            resize: vertical;
+        }
+
+        .comment>form textarea:focus {
+            outline: none;
+            border-color: #b85c43;
+        }
+
+        .comment>form .btn {
+            margin-right: 8px;
+            padding: 7px 12px;
+            font-size: 13px;
+        }
+
+        /* ----- COMMENT DELETE FORM ----- */
+
+        .comment-delete-form {
+            display: inline-block;
+        }
+
+        .comment-delete-form .btn {
+            padding: 7px 12px;
+            border: 1px solid #b85c43;
+            border-radius: 8px;
+            background: transparent;
+            color: #b85c43;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .comment-delete-form .btn:hover {
+            background: #b85c43;
+            color: #fffaf1;
+        }
+
+        /* ----- COMMENT BUTTON ----- */
+
+        .comment-submit-btn {
+            margin-top: 4px;
+            padding: 9px 16px;
+            border: 1px solid #b85c43;
+            border-radius: 8px;
+            background: #b85c43;
+            color: #fffaf1;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .comment-submit-btn:hover {
+            background: #934832;
+            border-color: #934832;
+        }
+
+        .comment-edit-btn {
+            padding: 7px 12px;
+            border: 1px solid #b85c43;
+            border-radius: 8px;
+            background: transparent;
+            color: #b85c43;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .comment-edit-btn:hover {
+            background: #b85c43;
+            color: #fffaf1;
+        }
+
+
         /* ----- MOBILE ----- */
 
         @media (max-width: 800px) {
@@ -745,7 +943,14 @@
                 <a href="{{ route('articles.index') }}">Новости</a>
                 <a href="{{ route('about') }}">О нас</a>
                 <a href="{{ route('contacts') }}">Контакты</a>
+
                 @auth
+                    @if (auth()->user()->role?->name === 'moderator')
+                        <a href="{{ route('articles.create') }}" class="nav-create-article">
+                            + Создать новость
+                        </a>
+                    @endif
+
                     <form action="{{ route('logout') }}" method="POST" class="nav-auth-form">
                         @csrf
                         <button type="submit" class="nav-auth-button">

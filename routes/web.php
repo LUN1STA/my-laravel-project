@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\CommentController;
 
 Route::get('/', [MainController::class, 'index'])->name('home');
 Route::get('/galery/{id}', [MainController::class, 'galery'])->name('galery');
@@ -24,6 +25,16 @@ Route::resource('/articles', ArticleController::class)
 
 Route::resource('/articles', ArticleController::class)
     ->only(['index', 'show']);
+
+Route::post('/articles/{article}/comments', [CommentController::class, 'store'])
+    ->middleware('auth:sanctum')
+    ->name('comments.store');
+Route::put('/comments/{comment}', [CommentController::class, 'update'])
+    ->middleware('auth:sanctum')
+    ->name('comments.update');
+Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])
+    ->middleware('auth:sanctum')
+    ->name('comments.destroy');
 
 Route::get('/about', function () {
     return view('about');

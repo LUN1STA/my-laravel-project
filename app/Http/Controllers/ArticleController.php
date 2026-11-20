@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ArticleController extends Controller
 {
@@ -18,11 +19,15 @@ class ArticleController extends Controller
 
     public function create()
     {
+        Gate::authorize('create', Article::class);
+
         return view('articles.create');
     }
 
     public function store(Request $request)
     {
+        Gate::authorize('create', Article::class);
+
         $validated = $request->validate([
             'name' => 'required|string|min:3|max:255',
             'image' => 'required|image|mimes:jpeg,jpg,png,webp|max:2048',
@@ -55,7 +60,7 @@ class ArticleController extends Controller
 
     public function show($id)
     {
-        $article = Article::findOrFail($id);
+        $article = Article::with('comments.user')->findOrFail($id);
 
         return view('articles.show', [
             'article' => $article
@@ -66,6 +71,8 @@ class ArticleController extends Controller
     {
         $article = Article::findOrFail($id);
 
+        Gate::authorize('update', $article);
+
         return view('articles.edit', [
             'article' => $article
         ]);
@@ -74,6 +81,8 @@ class ArticleController extends Controller
     public function update(Request $request, $id)
     {
         $article = Article::findOrFail($id);
+
+        Gate::authorize('update', $article);
 
         $validated = $request->validate([
             'name' => 'required|string|min:3|max:255',
@@ -112,6 +121,8 @@ class ArticleController extends Controller
     public function destroy($id)
     {
         $article = Article::findOrFail($id);
+
+        Gate::authorize('delete', $article);
 
         $article->delete();
 

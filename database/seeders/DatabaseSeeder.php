@@ -4,11 +4,15 @@ namespace Database\Seeders;
 
 use App\Models\Article;
 use Illuminate\Database\Seeder;
+use Database\Seeders\RoleSeeder;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        Article::factory(10)->create();
+        $this->call([
+            RoleSeeder::class,
+            UserRoleSeeder::class,
+        ]);
     }
 }
